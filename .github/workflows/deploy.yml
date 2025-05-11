@@ -13,50 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
     
-    - name: List repository contents (debug)
-      run: |
-        echo "Current directory:"
-        pwd
-        echo "Repository contents:"
-        ls -la
-        echo "App directory contents:"
-        ls -la app/
-    
-    - name: Set up Docker to use Minikube's environment
-      run: |
-        echo "Configuring Docker to use Minikube's daemon..."
-        eval $(minikube docker-env)
-        echo "DOCKER_HOST=$DOCKER_HOST" >> $GITHUB_ENV
-        echo "DOCKER_TLS_VERIFY=$DOCKER_TLS_VERIFY" >> $GITHUB_ENV
-        echo "DOCKER_CERT_PATH=$DOCKER_CERT_PATH" >> $GITHUB_ENV
-    
     - name: Build Backend Docker image
       run: |
-        # Check if backend directory exists inside app
-        if [ -d "app/backend" ]; then
-          cd app/backend
-          docker build -t abdulahadmalik/attendance-backend:latest .
-          cd ../..
-        else
-          echo "Backend directory not found in app/"
-          echo "App contents:"
-          ls -la app/
-          exit 1
-        fi
+        cd app/backend
+        docker build -t abdulahadmalik/attendance-backend:latest .
+        cd ../..
     
     - name: Build Frontend Docker image
       run: |
-        # Check if frontend directory exists inside app
-        if [ -d "app/frontend" ]; then
-          cd app/frontend
-          docker build -t abdulahadmalik/attendance-frontend:latest .
-          cd ../..
-        else
-          echo "Frontend directory not found in app/"
-          echo "App contents:"
-          ls -la app/
-          exit 1
-        fi
+        cd app/frontend
+        docker build -t abdulahadmalik/attendance-frontend:latest .
+        cd ../..
     
     - name: Login to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -71,12 +38,7 @@ jobs:
       run: |
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
-        
-    - name: Wait for Deployment
-      run: |
-        kubectl rollout status deployment/attendance-backend
-        kubectl rollout status deployment/attendance-frontend
-        
+    
     - name: Verify Deployment
       run: |
         echo "Pods Status:"
