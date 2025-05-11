@@ -1,0 +1,67 @@
+# Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: attendance-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: attendance-backend
+  template:
+    metadata:
+      labels:
+        app: attendance-backend
+    spec:
+      containers:
+      - name: backend
+        image: abdulahadmalik/attendance-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongodb:27017/attendance"
+
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: attendance-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: attendance-frontend
+  template:
+    metadata:
+      labels:
+        app: attendance-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: abdulahadmalik/attendance-frontend:latest
+        ports:
+        - containerPort: 80
+
+---
+# MongoDB Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:6
+        ports:
+        - containerPort: 27017

@@ -1,0 +1,41 @@
+# Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: attendance-backend-service
+spec:
+  type: NodePort
+  selector:
+    app: attendance-backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30001
+
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: attendance-frontend-service
+spec:
+  type: NodePort
+  selector:
+    app: attendance-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30002
+
+---
+# MongoDB Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - port: 27017
+      targetPort: 27017
