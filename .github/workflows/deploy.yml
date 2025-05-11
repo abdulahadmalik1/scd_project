@@ -34,6 +34,17 @@ jobs:
     - name: Push Frontend image to Docker Hub
       run: docker push abdulahadmalik/attendance-frontend:latest
     
+    - name: Start and Configure Minikube
+      run: |
+        # Ensure Minikube is running
+        minikube status || minikube start
+        
+        # Set kubectl context to Minikube
+        kubectl config use-context minikube
+        
+        # Verify connection
+        kubectl get nodes
+    
     - name: Deploy to Minikube
       run: |
         kubectl apply -f deployment.yaml
