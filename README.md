@@ -30,4 +30,4 @@ docker run -d --name backend -p 5000:5000 attendance-backend
 1. Install dependencies: \`npm install\`
 2. Start backend: \`cd backend && npm start\`
 3. Start frontend: \`cd frontend && npm start\`
-EOF
+EOF# Trigger build
