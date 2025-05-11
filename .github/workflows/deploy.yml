@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build-deploy:
@@ -26,13 +23,15 @@ jobs:
     
     - name: Build Backend Docker image
       run: |
-        cd backend
+        cd app/backend
         docker build -t abdulahadmalik/attendance-backend:latest .
+        cd ../..
     
     - name: Build Frontend Docker image
       run: |
-        cd frontend
+        cd app/frontend
         docker build -t abdulahadmalik/attendance-frontend:latest .
+        cd ../..
     
     - name: Login to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
